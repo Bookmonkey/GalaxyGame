@@ -48,15 +48,20 @@ create table planet_buildings (
   create table player_fleet (
     id serial not null primary key,
     fighter_total int,
+    corvette_total int,
     frigate_total int,
     cruisers_total int,
     battleship_total int,
     battlecruiser_total int,
-    bomber_total int,
+    lightbomber_total int,
+    heavybomber_total int,
     carrier_total int,
+    destroyer_total int,
+    flagship_total int,
     drone_total int,
-    mining_total int,
-    research_total int,
+    miner_total int,
+    salvager_total int,
+    researchvessel_total int,
     colonizer_total int,
     player_id int not null references player(id)
   );
