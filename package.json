@@ -1,0 +1,44 @@
+{
+  "name": "galaxygame",
+  "version": "1.0.0",
+  "description": "Planning Document - \r https://docs.google.com/document/d/1-G4UmwPdRxnubN2P6qAVIo_qADw2GpFwggUfvAKHQAw/edit",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "parcel-bundler": "^1.12.4",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.3.3",
+    "vue": "^2.6.12",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.4.5"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.2.0",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "scripts": {
+    "client": "parcel client/index.html",
+    "server": "node server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bookmonkey/GalaxyGame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bookmonkey/GalaxyGame/issues"
+  },
+  "homepage": "https://github.com/Bookmonkey/GalaxyGame#readme",
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.common.js"
+  }
+}

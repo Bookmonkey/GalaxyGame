@@ -1,32 +1,39 @@
 const { Router } = require("express");
 
+
 let API = function() {
   const router = Router();
 
-  router.get("/get", (req, res) => {
-    console.log("get people");
-  });
 
   // resources
   // players
-  router.get("/player/overview/:playerID", (req, res) => {
-    // gets resources
+  router.get("/overview/:playerID", (req, res) => {
+    // get planets + buildings
+    // const planets = Planets.getByPlayerId()
+
+    // get all queues [building, fleet and research]
+
+
+    /**
+     * return {
+     *  planets
+     *  resources,
+     *  queues: 
+     * }
+     */
+    
+    
+  });
+  router.post("/colonize/:playerId", (res, req) => {
+    // let taken = Galaxy.isTaken(hexPos);
   });
 
-  router.post("/upgrade/building", (req, res) => {});
-
-  router.post("/build/fleet", (req, res) => {});
-
-  router.post("/colonize/:playerId", (res, req) => {
-    // call this when  
-  })
-
-  router.post("/research", (res, req) => {});
-  router.post("/research", (res, req) => {});
-  router.post("/research", (res, req) => {});
+  router.post("/queue/buildings/add",(req, res) => {});
+  router.post("/queue/fleet/add", (req, res) => {});
+  router.post("/queue/research/add",(req, res) => {});
 
 
   return router;
 }
 
-modules.export = API;
+module.exports = API;
