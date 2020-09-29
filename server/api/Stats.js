@@ -7,14 +7,14 @@ const Buildings = [{
   {
     type: 'resource',
     key: 'chemical',
-    name: "Chemical Plant",
+    name: "Chemical Synthesizer",
     base_mod: 0.2,
   },
 
   {
     type: 'resource',
     key: 'gas',
-    name: "Gas Plant",
+    name: "Gas Extractor",
     base_mod: 0.3,
   },
   {
@@ -34,8 +34,8 @@ const Buildings = [{
 
   {
     type: 'storage',
-    key: 'chemcial_storage',
-    name: "Chemcial Storage",
+    key: 'chemical_storage',
+    name: "Chemical Storage",
     capacity: 20000
   },
   {
