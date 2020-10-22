@@ -31,7 +31,7 @@
           
           <div class="production">
             <div class="resources">M: 100, C: 100, G: 000</div>
-            <div class="time">Time: {{ calcualateBasedOnLevel(building) }}</div>
+            <div class="time">Time: {{ convertToHumanFormat(planetBuildings.times[building.key]) }}</div>
           </div>
 
           <div class="button-group">
@@ -45,6 +45,7 @@
     <div class="action-category">Services</div>
     <div class="action-category">Wonders</div>
     {{ planetInfo }}
+    {{ planetBuildings }}
   </div>
 </template>
 
@@ -100,7 +101,7 @@ export default {
 
     getCurrentLevelByKey(key) {
       if(this.planetBuildings){
-        return this.planetBuildings[key];
+        return this.planetBuildings.levels[key];
       }
     },
 

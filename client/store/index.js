@@ -138,7 +138,10 @@ const getters = {
   },
 
   planetBuildings: (state) => {
-    return state.currentPlanet.levels;
+    return {
+      levels: state.currentPlanet.levels,
+      times: state.currentPlanet.buildingTimes
+    };
   },
 
   planetMilitary: (state) => {

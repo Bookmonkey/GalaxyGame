@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const Planets = require("../controllers/Planets");
 
-const { Buildings } = require("../../public/Stats");
+const { Global, Buildings } = require("../../public/Stats");
 
 
 let API = function() {
@@ -63,9 +63,23 @@ let API = function() {
   return router;
 }
 
+function getCurrentTimeForLevel(item, levels) {
+  let specialBaseTime = parseInt(Global.build_time);
+  let baseTime = parseInt(item.base_build_time);
+  let mod = parseFloat(item.build_time_mod);
+  let level = parseInt(levels[item.key]);
+  let time = baseTime;
+
+  if(level > 0) {
+    time *= (mod * level); 
+  }
+
+  return time;
+}
+
 
 function formatPlanetInfo(planetInfo){
-  return {
+  let info = {
     info: {
       id: planetInfo.planet_id,
       name: planetInfo.planet_name,
@@ -83,8 +97,22 @@ function formatPlanetInfo(planetInfo){
       chemical: planetInfo.chemical_level,
       gas: planetInfo.gas_level,
     },
+    buildingTimes: {},
     military: {},
-  }
+  };
+
+  // loops through Stats building object
+  // calculates resources and time based on levels
+  // then appends to the info object above
+  Buildings.map((building) => {
+    let key = building.key;
+    let timeForLevel = getCurrentTimeForLevel(building, info.levels);
+    info.buildingTimes[key] = timeForLevel;
+
+    return building;
+  });
+
+  return info;
 }
 
 module.exports = API;

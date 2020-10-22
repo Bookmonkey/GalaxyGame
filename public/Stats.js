@@ -1,3 +1,7 @@
+const Global = {
+  build_time: 0.00
+};
+
 const Buildings = [{
     type: 'resource',
     key: 'mine',
@@ -117,6 +121,7 @@ const Defence = [];
 
 
 module.exports = {
+  Global,
   Buildings,
   Fleet,
   ResearchTree,
