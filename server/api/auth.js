@@ -1,34 +1,118 @@
-const { Router } = require("express");
+const {
+  Router
+} = require("express");
 const Auth = require("../controllers/Auth");
 const bcrypt = require("bcrypt");
 const SALTROUNDS = 10;
 
-const db = require("../db");
-const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 
-let AuthRouter = function() {
+const db = require("../db");
+const Planets = require("../controllers/Planets");
+
+let AuthRouter = function (passport) {
   const router = Router();
 
-  router.post("/create", async (req, res) => {
-    console.log("create user");
+  // used to serialize the user for the session
+  passport.serializeUser(function (user, done) {
+    done(null, user.id);
+  });
 
-    let name = "account";
-    let password = "grass87b";
+  // used to deserialize the user
+  passport.deserializeUser(function (id, done) {
+    Auth.getUserById(id)
+      .then((user) => {
+        done(null, user);
+      })
+      .catch((e) => {
+        done(e, false);
+      });
+  });
 
-    try {
-      let hashedPassword = await bcrypt.hash(password, SALTROUNDS);      
-      let accountCreated = await Auth.createAccount(name, hashedPassword);
+  passport.use("local", new LocalStrategy(function (username, password, done) {
+    Auth.getUserByUsername(username)
+      .then(function (user) {
+        if (!user) {
+          done(null, false, "Unknown user");
+        } else if (!bcrypt.compareSync(password, user.password)) {
+          done(null, false, "Wrong password");
+        } else {
+          console.log(user);
+          done(null, user);
+        }
+      })
+      .catch(function (e) {
+        done(null, false, e.name + " " + e.message);
+      });
+  }));
 
-    } catch (error) {
-      console.error(error);      
+
+  router.post("/login", (req, res, next) => {
+    passport.authenticate("local", function (err, userInfo, info) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!userInfo) {
+        return res.status(400).send({ error: "Incorrect username/password combination" });
+      }
+
+      req.login(userInfo, function (err) {
+        if (err) {
+          return next(err);
+        }
+        
+        res.status(200).send({
+          username: req.user.username,
+          playerId: req.user.id
+        });
+      });
+    })(req, res, next);
+  });
+
+
+  router.get("/isloggedin", (req, res) => {
+    if(req.isAuthenticated()) {
+      let userInfo = {
+        playerId: req.user.id,
+        username: req.user.username
+      }
+      res.status(200).send(userInfo);
+    } 
+    else {
+      res.status(400).send(false);
     }
 
-  
-    // Auth.createAccount();
   });
-  
-  router.post("/login", (req, res) => {
-    // Auth.login()
+
+  router.get("/logout", (req, res) => {
+    req.session.destroy((err) => {
+      res.redirect('/');
+    });
+  });
+
+  router.post("/create", async (req, res) => {
+    let email = req.body.email;
+    let username = req.body.username;
+    let password = req.body.password;
+    let confirmPassword = req.body.confirm_password;
+
+    if(password === confirmPassword) {
+      try {
+        let hashedPassword = await bcrypt.hash(password, SALTROUNDS);
+        let playerId = await Auth.createAccount(email, username, hashedPassword);
+        let createdPlanet = await Planets.create(playerId);
+        
+        // create planet and other tables
+        
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    else {
+      res.status(400).send("not ok");
+    }
   });
 
   router.post("/rename", (req, res) => {
@@ -39,4 +123,3 @@ let AuthRouter = function() {
 }
 
 module.exports = AuthRouter;
-

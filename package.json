@@ -9,23 +9,28 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "parcel-bundler": "^1.12.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pg": "^8.3.3",
     "vue": "^2.6.12",
     "vue-hot-reload-api": "^2.3.4",
-    "vue-router": "^3.4.5"
+    "vue-router": "^3.4.5",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.2.0",
+    "sass": "^1.26.11",
     "vue-template-compiler": "^2.6.12"
   },
   "scripts": {
-    "client": "parcel client/index.html",
-    "server": "node server/app.js",
+    "client": "parcel client/index.html --https",
+    "server": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

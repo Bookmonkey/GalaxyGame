@@ -1,0 +1,131 @@
+@import "variables";
+@import "components/button";
+@import "planet";
+
+html,
+body {
+  font-family: $font-noto-sans;
+  background: $bg-colour;
+  padding: 0;
+  margin: 0;
+}
+
+
+// homepage
+
+.container {
+  position: relative;
+  width: 65%;
+  margin: 24px auto;
+
+  padding: 24px;
+
+  background: $colour-light-black;
+  color: $text-white;
+  box-shadow: $shadow-lg;
+
+
+  &.sm {
+    width: 40%;
+  }
+}
+
+
+// navigation
+.navigation {
+  width: 100%;
+  padding: 14px;
+  box-sizing: border-box;
+
+  background: $navigation-colour;
+  color: $text-dark-grey;
+
+  display: flex;
+  justify-content: space-between;
+
+
+  a {
+    color: $text-dark-grey;
+    padding: 6px;
+  }
+}
+
+.game {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 24px;
+
+
+  .ui {
+    width: 100%;
+  }
+
+  .left-sidebar {
+    width: 200px;
+    margin-right: 24px;
+    display: flex;
+    flex-direction: column;
+
+
+    .item {
+      background: $navigation-colour;
+      color: #49545b;
+      padding: 12px 8px;
+      text-align: center;
+      text-decoration: none;
+
+      &.active {
+        background: $colour-teal;
+        color: $text-white;
+      }
+    }
+  }
+}
+
+.empire {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.info-panel {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  .summary,
+  .resources {
+    flex: 1;
+  }
+}
+
+.card {
+  background: $card-colour;
+  color: #8d9498;
+  box-shadow: $shadow-lg;
+
+  margin-bottom: 12px;
+}
+
+
+.text-white {
+  color: $colour-grey;
+}
+
+
+// form
+
+.form-field {
+  input {
+    display: block;
+  }
+}
+
+// text
+h1, 
+.h1 {
+  padding: 0;
+  margin: 0 0 16px 0;
+  font-size: 2.4rem;
+  letter-spacing: 0.4px;
+}

@@ -1,0 +1,32 @@
+// colours
+
+$colour-black: #131e25;
+
+$colour-light-black: #1f2c35;
+
+$colour-teal: #00beaf;
+$colour-light-teal: lighten($colour-teal, 5);
+
+$colour-blue: lighten($colour-black, 50);
+$colour-light-blue: lighten($colour-black, 65);
+
+$colour-grey: #4c565d;
+$colour-light-grey: lighten($colour-grey, 40);
+
+$bg-colour: $colour-black;
+
+$navigation-colour: $colour-light-black;
+$card-colour: $colour-light-black;
+
+$planet-nav-colour: lighten($card-colour, 10);
+
+$text-white: #fefefe;
+$text-dark-grey: #8d9498;
+
+// shadows
+$shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);;
+
+// text
+$font-noto-sans: "Noto Sans", sans-serif;
+

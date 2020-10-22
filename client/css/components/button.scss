@@ -1,0 +1,50 @@
+.button {
+  display: inline-block;
+  padding: 8px;
+  color: $colour-black;
+
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  z-index: 99;
+  transition: background 0.2s linear;
+
+  &.login,
+  &.green {
+    background: $colour-teal;
+
+    &:hover {
+      background: $colour-light-teal;
+    }
+  }
+
+
+  &.register,
+  &.default {
+    background: $colour-light-grey;
+  }
+
+  &.blue {
+    background: $colour-blue;
+
+    &:hover {
+      background: $colour-light-blue;
+    }
+  }
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  .button {
+    flex: 1;
+    margin-right: 6px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
