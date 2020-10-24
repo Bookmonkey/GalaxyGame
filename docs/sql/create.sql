@@ -1,3 +1,6 @@
+
+SET TIMEZONE='UTC';
+
   -- ??
 create table player (
   id serial not null primary key,
@@ -34,6 +37,7 @@ create table planet_resources (
   chemicals bigint not null default 100,
   gases bigint not null default 100,
   energy bigint not null default 100,
+  last_updated_timestamp TIMESTAMPTZ default now(), -- no timezones 
   player_id int not null references player(id),
   planet_id int not null references planet(id)
 );

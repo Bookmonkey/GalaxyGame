@@ -46,7 +46,8 @@ const actions = {
     
     return fetch(`${AUTH}/isloggedin`)
     .then(res => res.json())
-    .then(userInfo => {      
+    .then(userInfo => {     
+      console.log(userInfo);
       return new Promise((resolve, reject) => {
         if(!userInfo) {
           reject();

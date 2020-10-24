@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const config = require("../config");
+const port = config.port;
 
 const cors = require("cors");
 const path = require("path");
@@ -52,4 +53,7 @@ app.get("/", function (req, res) {
 });
 
 
-app.listen(port, () => console.log(`> Galaxy Game server starting on http://localhost:${port}/`));
+app.listen(port, () => {
+  console.log(`> Galaxy Game server starting on http://localhost:${port}/`);
+  console.log(`> Using DB: ${config.database.database} on ${config.database.host}`);
+});

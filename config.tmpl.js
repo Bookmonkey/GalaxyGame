@@ -1,5 +1,6 @@
 module.exports = {
   API: "http://localhost:3000/api",
+  AUTH: "http://localhost:3000/auth",
   port: 3000,
   database: {
     host: "localhost",

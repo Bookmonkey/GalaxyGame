@@ -131,6 +131,18 @@ const Planets = {
   getQueue: (type) => { },
   addToQueue: () => { },
   removeFromQueue: () => { },
+
+
+  updateResources: async (resources, planetId, playerId) => {
+    const { rows } = await db.query(`
+    update planet_resources 
+      set minerals = $1,
+      chemicals = $2,
+      gases = $3,
+      energy = $5
+      where planet_id = $6 and player_id = $7; 
+    `)
+  } 
 }
 
 module.exports = Planets
