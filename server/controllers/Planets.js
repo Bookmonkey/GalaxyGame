@@ -133,15 +133,30 @@ const Planets = {
   removeFromQueue: () => { },
 
 
+  getResources: async(planetId, playerId) => {
+    const { rows } = await db.query(`select minerals, chemicals, gases, energy, last_updated_timestamp from planet_resources where planet_id = $1 and player_id = $2;`, [planetId, playerId]);
+    return rows[0];
+  },
+
   updateResources: async (resources, planetId, playerId) => {
+    console.log(resources);
     const { rows } = await db.query(`
     update planet_resources 
       set minerals = $1,
       chemicals = $2,
       gases = $3,
-      energy = $5
-      where planet_id = $6 and player_id = $7; 
-    `)
+      energy = $4,
+      last_updated_timestamp = now()
+      where planet_id = $5 and player_id = $6; 
+    `,
+    [
+      resources.minerals,
+      resources.chemicals,
+      resources.gases,
+      resources.energy,
+      planetId,
+      playerId
+    ]);
   } 
 }
 

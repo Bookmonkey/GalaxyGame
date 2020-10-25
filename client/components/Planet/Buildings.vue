@@ -83,7 +83,6 @@ export default {
     },
     gotoActionInfo(name) {
       this.buildingName = name;
-      console.log(name);
     },
     calcualateBasedOnLevel(building) {
       let baseTime = parseInt(building.base_build_time);

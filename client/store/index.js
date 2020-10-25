@@ -47,7 +47,6 @@ const actions = {
     return fetch(`${AUTH}/isloggedin`)
     .then(res => res.json())
     .then(userInfo => {     
-      console.log(userInfo);
       return new Promise((resolve, reject) => {
         if(!userInfo) {
           reject();
@@ -86,9 +85,6 @@ const actions = {
       playerId: state.player.playerId,
     };
 
-    console.log(body);
-
-
     fetch(`${API}/planet/upgrade`, {
       method: "POST",
       mode: "cors", 
@@ -111,7 +107,6 @@ const actions = {
     return fetch(`${API}/planet/${planetId}`)
     .then(res => res.json())
     .then(planet => {
-      console.log(planet);
       commit('setCurrentPlanet', planet);
     });
   }

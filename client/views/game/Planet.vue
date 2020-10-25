@@ -16,7 +16,7 @@
       <div class="resources list">
         <div class="item">Minerals: ({{ Math.round(expectedResources.minerals, 4)}})</div>
         <div class="item">Chemcials: ({{ Math.round(expectedResources.chemicals, 4)}})</div>
-        <div class="item">Gas: ({{ Math.round(expectedResources.gases, 4)}})</div>
+        <div class="item">Gases: ({{ Math.round(expectedResources.gases, 4)}})</div>
         <div class="item">Power: ({{ planetResources.energy }})</div>
       </div>
     </div>
@@ -78,7 +78,7 @@ export default {
 
 
     // mods
-    console.log(this.resourceModifiers); 
+    console.log(this.planetResources); 
     
 
     // // create timers

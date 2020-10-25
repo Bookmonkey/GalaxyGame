@@ -51,8 +51,10 @@ let API = function() {
 
 
     await Planets.upgradeBuilding(type, key, planetId, playerId);
-
-    await Planets.updateResources(planetId, playerId);
+    
+    let resources = await Planets.getResources(planetId, playerId);
+    let latestResources = calculateResourcesFromLastTimestamp(resources);    
+    await Planets.updateResources(latestResources, planetId, playerId);
     // console.log(type, key, planetId, playerId);
 
 
@@ -88,12 +90,7 @@ function formatPlanetInfo(planetInfo){
       type: planetInfo.planet_type,
       slots: planetInfo.building_slots_total
     },
-    resources: {
-      // minerals: planetInfo.minerals,
-      // chemicals: planetInfo.chemicals,
-      // gases: planetInfo.gases,
-      // energy: planetInfo.energy,
-    },
+    resources: { },
     levels: {
       mine: planetInfo.mine_level,
       chemical: planetInfo.chemical_level,
@@ -124,11 +121,11 @@ function calculateResourcesFromLastTimestamp(info) {
   let resources = {
     minerals: parseInt(info.minerals), 
     chemicals: parseInt(info.chemicals),
-    gas: parseInt(info.gases),
+    gases: parseInt(info.gases),
     energy: parseInt(info.energy)
   };
 
-
+  
   let timeNow = new Date();
   let lastTime = new Date(info.last_updated_timestamp);
   let totalTimeSince = Math.round(Math.abs((timeNow.getTime() - lastTime.getTime()) / 1000));
@@ -138,10 +135,11 @@ function calculateResourcesFromLastTimestamp(info) {
       resMods[ele.key] = parseFloat(ele.resource_mod)
     };
   });
-
-  resources.minerals += resources.minerals * resMods.mine * totalTimeSince;
-  resources.chemicals += resources.minerals * resMods.chemical * totalTimeSince;
-  resources.gas += resources.minerals * resMods.gas * totalTimeSince;
+  
+  
+  resources.minerals += Math.floor(resources.minerals * resMods.mine * totalTimeSince);
+  resources.chemicals +=  Math.floor(resources.chemicals * resMods.chemical * totalTimeSince);
+  resources.gases += Math.floor(resources.gases * resMods.gas * totalTimeSince);
   
   return resources;
 }
