@@ -11,6 +11,8 @@ import Empire from "./views/game/Empire";
 import Planet from "./views/game/Planet";
 import ResearchTree from "./views/game/ResearchTree";
 import FleetCommand from "./views/game/FleetCommand";
+
+import HoloDeck from "./views/game/HoloDeck";
 import Settings from "./views/game/Settings";
 
 Vue.use(VueRouter);
@@ -81,6 +83,11 @@ const routes = [{
         path: 'fleet',
         name: "fleet",
         component: FleetCommand
+      },
+      {
+        path: 'holodeck',
+        name: "holodeck",
+        component: HoloDeck,
       },
       {
         path: 'settings',

@@ -52,14 +52,7 @@ let API = function() {
 
     await Planets.upgradeBuilding(type, key, planetId, playerId);
     
-    let resources = await Planets.getResources(planetId, playerId);
-    let latestResources = calculateResourcesFromLastTimestamp(resources);    
-    await Planets.updateResources(latestResources, planetId, playerId);
-    // console.log(type, key, planetId, playerId);
-
-
-    
-    
+    updateResources(planetId, playerId);    
   });  
 
 
@@ -111,35 +104,69 @@ function formatPlanetInfo(planetInfo){
     return building;
   });
 
+  let minerals = parseInt(planetInfo.minerals);
+  let chemicals = parseInt(planetInfo.chemicals);
+  let gases = parseInt(planetInfo.gases);
+  let energy = parseInt(planetInfo.energy);
+  let lastTimestamp = planetInfo.last_updated_timestamp;
 
-  info.resources = calculateResourcesFromLastTimestamp(planetInfo);
+  info.resources = calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy, lastTimestamp, info.levels);
 
   return info;
 }
 
-function calculateResourcesFromLastTimestamp(info) {
+
+async function updateResources(planetId, playerId) {
+  let resources = await Planets.getResources(planetId, playerId);
+  let buildingLevels = await Planets.getBuildingLevels(planetId, playerId);
+  let levels = {
+    mine: buildingLevels.mine_level,
+    chemical: buildingLevels.chemical_level,
+    gas: buildingLevels.gas_level
+  };
+
+  
+  let minerals = parseInt(resources.minerals);
+  let chemicals = parseInt(resources.chemicals);
+  let gases = parseInt(resources.gases);
+  let energy = parseInt(resources.energy);
+
+    
+  let lastTimestamp = resources.last_updated_timestamp;
+
+  let latestResources = calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy, lastTimestamp, levels);
+  await Planets.updateResources(latestResources, planetId, playerId);
+}
+
+function calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy, lastTimestamp, levels) {
   let resources = {
-    minerals: parseInt(info.minerals), 
-    chemicals: parseInt(info.chemicals),
-    gases: parseInt(info.gases),
-    energy: parseInt(info.energy)
+    minerals: minerals, 
+    chemicals: chemicals,
+    gases: gases,
+    energy: energy,
   };
 
   
   let timeNow = new Date();
-  let lastTime = new Date(info.last_updated_timestamp);
+  let lastTime = new Date(lastTimestamp);
+  
+  // number of seconds since
   let totalTimeSince = Math.round(Math.abs((timeNow.getTime() - lastTime.getTime()) / 1000));
-  let resMods = {}
+
+
+  // calculate the amount generated for each second.
+  let latestResources = {};
   Buildings.filter(ele => {
+    
     if(ele.key === 'mine' || ele.key === 'chemical' || ele.key === 'gas') {
-      resMods[ele.key] = parseFloat(ele.resource_mod)
+      latestResources[ele.key] = ele.calculate(levels[ele.key]) / 3600;
     };
   });
   
   
-  resources.minerals += Math.floor(resources.minerals * resMods.mine * totalTimeSince);
-  resources.chemicals +=  Math.floor(resources.chemicals * resMods.chemical * totalTimeSince);
-  resources.gases += Math.floor(resources.gases * resMods.gas * totalTimeSince);
+  resources.minerals += Math.floor(latestResources.mine * totalTimeSince);
+  resources.chemicals +=  Math.floor(latestResources.chemical * totalTimeSince);
+  resources.gases += Math.floor(latestResources.gas * totalTimeSince);
   
   return resources;
 }

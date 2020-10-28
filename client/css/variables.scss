@@ -4,8 +4,14 @@ $colour-black: #131e25;
 
 $colour-light-black: #1f2c35;
 
+
 $colour-teal: #00beaf;
 $colour-light-teal: lighten($colour-teal, 5);
+
+$colour-yellow: #FFA700;
+$colour-light-yellow: lighten($colour-yellow, 15);
+$colour-orange: #FF6F00;
+$colour-red: #FC000D;
 
 $colour-blue: lighten($colour-black, 50);
 $colour-light-blue: lighten($colour-black, 65);

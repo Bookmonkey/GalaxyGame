@@ -109,15 +109,16 @@ const Planets = {
         break;
     }
 
-    console.log(column);
-
     if(column){
       const { rows, command } = await db.query(`
       update planet_buildings set ${column} = ${column} + 1 where planet_id = $1 and player_id = $2;
       `, [planetId, playerId]);      
-
-      console.log(rows, command);
     }
+  },
+
+  getBuildingLevels: async (planetId, playerId) => {
+    const { rows } = await db.query(`select * from planet_buildings where planet_id = $1 and player_id = $2;`, [planetId, playerId]);
+    return rows[0];
   },
 
   buildFleet: (planetId) => {},
@@ -139,7 +140,6 @@ const Planets = {
   },
 
   updateResources: async (resources, planetId, playerId) => {
-    console.log(resources);
     const { rows } = await db.query(`
     update planet_resources 
       set minerals = $1,
@@ -157,7 +157,7 @@ const Planets = {
       planetId,
       playerId
     ]);
-  } 
+  },
 }
 
 module.exports = Planets

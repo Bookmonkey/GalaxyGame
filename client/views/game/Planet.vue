@@ -75,29 +75,29 @@ export default {
       chemicals: parseFloat(this.planetResources.chemicals),
       gases: parseFloat(this.planetResources.gases),
     };
-
-
-    // mods
-    console.log(this.planetResources); 
     
 
     // // create timers
     this.resourceTimers.minerals = setInterval(() => {
-      this.expectedResources.minerals += this.expectedResources.minerals * this.resourceModifiers.minerals;
+      let level = this.buildingLevelByKey('mine');
+      this.expectedResources.minerals += this.resourceStats.mine.calculate(level) / 3600;
     }, 1000);
 
     this.resourceTimers.chemicals = setInterval(() => {
-      this.expectedResources.chemicals += this.expectedResources.chemicals * this.resourceModifiers.chemicals;
+      let level = this.buildingLevelByKey('chemical');
+      console.log(level);
+      this.expectedResources.chemicals += this.resourceStats.chemical.calculate(level) / 3600;
     }, 1000);
 
     this.resourceTimers.gases = setInterval(() => {
-      this.expectedResources.gases += this.expectedResources.gases * this.resourceModifiers.gases;
+      let level = this.buildingLevelByKey('gas');
+      this.expectedResources.gases += this.resourceStats.gas.calculate(level) / 3600;
     }, 1000);
 
     
   },
   computed: {
-    ...mapGetters(['isLoaded', 'planetResources', 'resourceModifiers']),
+    ...mapGetters(['isLoaded', 'planetResources', 'resourceStats', 'buildingLevelByKey']),
   },
   methods: {
     ...mapActions(['setCurrentPlanet']),

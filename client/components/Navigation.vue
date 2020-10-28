@@ -6,6 +6,8 @@
       <router-link to="/game/score">Scoreboard</router-link>
       <router-link to="/game/friends">Friends</router-link>
       <router-link to="/game/allance">Allance</router-link>
+      
+      <router-link to="/game/holodeck">Holodeck</router-link>
       <router-link to="/game/settings">Options</router-link>
       <router-link to="/game/logout">Logout</router-link>
     </div>

@@ -1,6 +1,6 @@
 import { API, AUTH } from "../../config";
 
-import { Buildings } from "../../public/Stats";
+import { Buildings, Ships, ResearchTree } from "../../public/Stats";
 
 import Vue from "vue";
 import Vuex from 'vuex';
@@ -17,7 +17,9 @@ const state = {
   planets: [],
   currentPlanet: [],
 
-  buildingList: Buildings,
+  buildings: Buildings,
+  ships: Ships,
+  research: ResearchTree,
   shipList: [],
   defenceList: [],
   researchTree: [],
@@ -129,7 +131,6 @@ const getters = {
   },
 
   planetResources: (state) => {
-    console.log(state.currentPlanet.resources);
     return state.currentPlanet.resources;
   },
 
@@ -140,28 +141,72 @@ const getters = {
     };
   },
 
+  buildingLevelByKey: (state) => (key) => {
+    return state.currentPlanet.levels[key];
+  },
+  
+
   planetMilitary: (state) => {
     return state.currentPlanet.military;
   },
 
-
+  // loops through the Stats building object and returns an object that has each building under their respective type.
+  // This is done as we can just pass each key, value pair into the ActionList component.
   buildings: (state) => {
-    return state.buildingList;
+    let buildingsByType = {};
+
+    state.buildings.map(ele => {
+      if(!buildingsByType[ele.type]) {
+        buildingsByType[ele.type] = new Array();
+      }
+
+      buildingsByType[ele.type].push(ele);
+    });
+    return buildingsByType;
+  },
+
+  ships: (state) => {
+    let shipsByType = {};
+    state.ships.map(ele => {
+      if(!shipsByType[ele.type]) {
+        shipsByType[ele.type] = new Array();
+      }
+
+      shipsByType[ele.type].push(ele);
+    });
+
+    return shipsByType;
+  },
+
+  research: (state) => {
+    let researchByType = {};
+
+    state.research.map(ele => {
+      if(!researchByType[ele.type]) {
+        researchByType[ele.type] = new Array();
+      }
+
+      researchByType[ele.type].push(ele);
+    });
+    return researchByType;
   },
 
 
-  resourceModifiers: (state) => {
-    let mods = {}
-    // TODO: need to think of a better way of doing this
-    state.buildingList.filter(ele => {
-      if(ele.key === 'mine') {
-        mods.minerals = ele.resource_mod;
-      }
-      if(ele.key === 'chemical') {
-        mods.chemicals = ele.resource_mod;
-      }
-      if(ele.key === 'gas') {
-        mods.gases = ele.resource_mod;
+  resourceStats: (state) => {
+    let mods = {
+      mine: {},
+      chemical: {},
+      gas: {}
+    }
+  
+    state.buildings.filter(ele => {
+      if(ele.key === 'mine'|| ele.key === 'chemical' || ele.key === 'gas') {
+        mods[ele.key] = {
+          base_resource: ele.base_resource,
+          resource_mod: ele.resource_mod,
+          calculate: ele.calculate,
+        };
+
       }
     });
 

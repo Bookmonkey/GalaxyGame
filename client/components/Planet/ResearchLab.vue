@@ -1,7 +1,5 @@
 <template>
   <div>
-    research lab
-
     <div class="actions">
       <div class="item">
         economic
