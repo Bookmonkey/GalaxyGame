@@ -3,12 +3,37 @@ const Global = {
   speed: 3,
 };
 
+const Resources = {
+  minerals: {
+    base_resource: 45,
+    resource_mod: 1.05,
+    calculate:  function (currentLevel) {
+      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
+      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
+    }
+  },
+  chemicals: {
+    base_resource: 30,
+    resource_mod: 1.03,
+    calculate:  function (currentLevel) {
+      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
+      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
+    }
+  },
+  gases: {
+    base_resource: 25,
+    resource_mod: 1,
+    calculate:  function (currentLevel) {
+      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
+      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
+    }
+  }
+}
+
 const Buildings = [{
     type: 'resource',
     key: 'mine',
     name: "Mineral Mine",
-    base_resource: 45,
-    resource_mod: 1.05,
     base_build_time: 60000,
     build_time_mod: 1.2,
     calculate:  function (currentLevel) {
@@ -327,6 +352,7 @@ const Defence = [];
 
 module.exports = {
   Global,
+  Resources,
   Buildings,
   Ships,
   ResearchTree,

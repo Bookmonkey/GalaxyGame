@@ -38,7 +38,8 @@
     
     .resources {
       display: flex;
-      .item {
+      .resource-item {
+        cursor: pointer;
         display: block;
         padding: 4px 12px;
       }

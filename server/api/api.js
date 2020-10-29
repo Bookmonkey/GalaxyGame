@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const Planets = require("../controllers/Planets");
 
-const { Global, Buildings } = require("../../public/Stats");
+const { Global, Resources, Buildings } = require("../../public/Stats");
 
 
 let API = function() {
@@ -155,17 +155,14 @@ function calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy,
 
 
   // calculate the amount generated for each second.
-  let latestResources = {};
-  Buildings.filter(ele => {
-    
-    if(ele.key === 'mine' || ele.key === 'chemical' || ele.key === 'gas') {
-      latestResources[ele.key] = ele.calculate(levels[ele.key]) / 3600;
-    };
-  });
+  let latestResources = {
+    minerals: Resources.minerals.calculate(levels['mine']) / 3600,
+    chemicals: Resources.chemicals.calculate(levels['chemical']) / 3600,
+    gases: Resources.gases.calculate(levels['gas']) / 3600,
+  };  
   
-  
-  resources.minerals += Math.floor(latestResources.mine * totalTimeSince);
-  resources.chemicals +=  Math.floor(latestResources.chemical * totalTimeSince);
+  resources.minerals += Math.floor(latestResources.minerals * totalTimeSince);
+  resources.chemicals +=  Math.floor(latestResources.chemicals * totalTimeSince);
   resources.gases += Math.floor(latestResources.gas * totalTimeSince);
   
   return resources;

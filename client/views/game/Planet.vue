@@ -14,10 +14,17 @@
       </div>
 
       <div class="resources list">
-        <div class="item">Minerals: ({{ Math.round(expectedResources.minerals, 4)}})</div>
-        <div class="item">Chemcials: ({{ Math.round(expectedResources.chemicals, 4)}})</div>
-        <div class="item">Gases: ({{ Math.round(expectedResources.gases, 4)}})</div>
-        <div class="item">Power: ({{ planetResources.energy }})</div>
+        <div class="resource-item minerals">Minerals: ({{ Math.round(planetResources.minerals, 4)}})</div>
+        <div class="resource-item chemicals">
+          Chemcials: ({{ Math.round(planetResources.chemicals, 4)}})
+        </div>
+        <div class="resource-item gases">
+          Gases: ({{ Math.round(planetResources.gases, 4)}})
+        </div>
+        <div class="resource-item">
+          Power: ({{ planetResources.energy }})
+
+        </div>
       </div>
     </div>
     
@@ -37,6 +44,10 @@ import Buildings from "../../components/Planet/Buildings";
 import SpacePort from "../../components/Planet/Spaceport";
 import ResearchLab from "../../components/Planet/ResearchLab";
 import { mapActions, mapGetters } from 'vuex';
+
+import tippy, {roundArrow} from 'tippy.js';
+import 'tippy.js/animations/scale.css';
+import 'tippy.js/dist/svg-arrow.css';
 
 export default {
   name: "planet",
@@ -67,40 +78,43 @@ export default {
     }
     else {
       this.activeTab = 'information';
-    }
+    }   
 
+    let mineLevel = this.buildingLevelByKey('mine');
+    let chemicalLevel = this.buildingLevelByKey('chemical');
+    let gasLevel = this.buildingLevelByKey('gas');
 
-    this.expectedResources = {
-      minerals: parseFloat(this.planetResources.minerals),
-      chemicals: parseFloat(this.planetResources.chemicals),
-      gases: parseFloat(this.planetResources.gases),
-    };
-    
+    this.resourceTimers.minerals = this.createTimer('minerals', mineLevel);
+    this.resourceTimers.chemicals = this.createTimer('chemicals', chemicalLevel);
+    this.resourceTimers.gases = this.createTimer('gases', gasLevel);
 
-    // // create timers
-    this.resourceTimers.minerals = setInterval(() => {
-      let level = this.buildingLevelByKey('mine');
-      this.expectedResources.minerals += this.resourceStats.mine.calculate(level) / 3600;
-    }, 1000);
-
-    this.resourceTimers.chemicals = setInterval(() => {
-      let level = this.buildingLevelByKey('chemical');
-      console.log(level);
-      this.expectedResources.chemicals += this.resourceStats.chemical.calculate(level) / 3600;
-    }, 1000);
-
-    this.resourceTimers.gases = setInterval(() => {
-      let level = this.buildingLevelByKey('gas');
-      this.expectedResources.gases += this.resourceStats.gas.calculate(level) / 3600;
-    }, 1000);
-
-    
+     tippy('.resource-item.minerals', this.createTooltip('minerals', mineLevel));
+     tippy('.resource-item.chemicals', this.createTooltip('chemicals', chemicalLevel));
+     tippy('.resource-item.gases', this.createTooltip('gases', gasLevel));
+         
   },
   computed: {
     ...mapGetters(['isLoaded', 'planetResources', 'resourceStats', 'buildingLevelByKey']),
   },
   methods: {
     ...mapActions(['setCurrentPlanet']),
+
+    createTimer(resourceKey, level) {
+      return setInterval(() => {
+        this.planetResources[resourceKey] += this.resourceStats[resourceKey].calculate(level) / 3600;
+      }, 1000);
+    },
+
+    createTooltip(resourceKey, level) {
+      return {
+        content: `Hourly: ${Math.floor(this.resourceStats[resourceKey].calculate(level))} <br> Storage: 0`,
+        allowHTML: true,
+        theme: 'dark',
+        placement: "bottom",
+        animation: "scale",
+        arrow: roundArrow
+      }
+    },
 
     isTabActive(tab) {
       return (tab === this.activeTab) ? 'active' : '';
@@ -115,3 +129,4 @@ export default {
 </script>
 
 <style>
+</style>

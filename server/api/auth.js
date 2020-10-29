@@ -37,7 +37,6 @@ let AuthRouter = function (passport) {
         } else if (!bcrypt.compareSync(password, user.password)) {
           done(null, false, "Wrong password");
         } else {
-          console.log(user);
           done(null, user);
         }
       })

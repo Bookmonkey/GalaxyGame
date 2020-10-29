@@ -89,9 +89,9 @@ export default {
         chemical: this.buildingLevelByKey('chemical'),
         gas: this.buildingLevelByKey('gas'),
     }
-    this.resources.mine = this.formatProductionStats('mine', this.levels.mine);
-    this.resources.chemical = this.formatProductionStats('chemical', this.levels.chemical);
-    this.resources.gas = this.formatProductionStats('gas', this.levels.gas);
+    this.resources.mine = this.formatProductionStats('minerals', this.levels.mine);
+    this.resources.chemical = this.formatProductionStats('chemicals', this.levels.chemical);
+    this.resources.gas = this.formatProductionStats('gases', this.levels.gas);
   },
   methods: { 
     ...mapActions(['renamePlanet', 'deletePlanet']),

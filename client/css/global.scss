@@ -12,7 +12,6 @@ body {
   margin: 0;
 }
 
-
 // homepage
 
 .container {
@@ -117,11 +116,23 @@ body {
 
 
 // form
-
 .form-field {
   input {
     display: block;
   }
+}
+
+
+// Tooltips
+.tippy-box[data-theme~='dark'] {
+  background-color: $colour-light-teal;
+  padding: 2px 8px;
+  border-radius: 5px;
+
+  box-shadow: $shadow-lg;
+}
+.tippy-box[data-theme~='dark'] > .tippy-svg-arrow {
+  fill: $colour-light-teal;
 }
 
 // text

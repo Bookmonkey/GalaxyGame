@@ -1,6 +1,6 @@
 import { API, AUTH } from "../../config";
 
-import { Buildings, Ships, ResearchTree } from "../../public/Stats";
+import { Resources, Buildings, Ships, ResearchTree } from "../../public/Stats";
 
 import Vue from "vue";
 import Vuex from 'vuex';
@@ -20,6 +20,7 @@ const state = {
   buildings: Buildings,
   ships: Ships,
   research: ResearchTree,
+  resources: Resources,
   shipList: [],
   defenceList: [],
   researchTree: [],
@@ -193,24 +194,7 @@ const getters = {
 
 
   resourceStats: (state) => {
-    let mods = {
-      mine: {},
-      chemical: {},
-      gas: {}
-    }
-  
-    state.buildings.filter(ele => {
-      if(ele.key === 'mine'|| ele.key === 'chemical' || ele.key === 'gas') {
-        mods[ele.key] = {
-          base_resource: ele.base_resource,
-          resource_mod: ele.resource_mod,
-          calculate: ele.calculate,
-        };
-
-      }
-    });
-
-    return mods;
+    return state.resources;
   }
 };
 
