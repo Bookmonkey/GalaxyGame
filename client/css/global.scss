@@ -93,8 +93,10 @@ body {
   display: flex;
   flex-direction: row;
   width: 100%;
+  .summary {
+    flex: 2
+  }
 
-  .summary,
   .resources {
     flex: 1;
   }
@@ -110,15 +112,67 @@ body {
 }
 
 
-.text-white {
-  color: $colour-grey;
+// tables 
+.table {
+  color: $text-white;
+  border-collapse: collapse;
+  th, td {
+    padding: 8px;
+    border-bottom: 1px solid rgba($color: $colour-grey, $alpha: 0.3);
+  }
+
+  tr {
+    cursor: pointer;
+  }
+
+  tbody tr {
+    &:hover {
+      background: rgba($color: $colour-grey, $alpha: 0.3);
+    }
+    th { 
+      font-weight:  normal;
+      text-align: left;
+    }
+
+    td {
+      text-align: center;
+    }
+  
+  }
+
+  thead {
+    background: rgba($color: $colour-grey, $alpha: 0.5);
+  }
 }
 
 
 // form
 .form-field {
+  margin-bottom: 12px;
+  label {
+    display: block;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
   input {
     display: block;
+    padding: 8px;
+    font-size: 1rem;
+    width: 100%;
+
+    background: $colour-grey;
+    color: $colour-light-grey;
+    border: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease-in-out;
+
+
+    &:focus {
+      background: $colour-light-grey;
+      color: $colour-grey;
+    }
   }
 }
 
@@ -142,4 +196,9 @@ h1,
   margin: 0 0 16px 0;
   font-size: 2.4rem;
   letter-spacing: 0.4px;
+}
+
+
+.text-white {
+  color: $colour-grey;
 }

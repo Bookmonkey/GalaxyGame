@@ -5,19 +5,19 @@
       <div class="form">
         <div class="form-field">
           <label for="email">email</label>
-          <input type="text" v-model="form.email">
+          <input type="text" id="email" name="email" v-model="form.email">
         </div>
         <div class="form-field">
           <label for="username">Username</label>
-          <input type="text" v-model="form.username">
+          <input type="text" id="username" name="username" v-model="form.username">
         </div>
         <div class="form-field">
-          <label for="password">password</label>
-          <input type="text" v-model="form.password">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" v-model="form.password">
         </div>
         <div class="form-field">
-          <label for="password">password</label>
-          <input type="text" v-model="form.confirm_password">
+          <label for="confirm_password">Confirm password</label>
+          <input type="password" id="confirm_password" name="confirm_password" v-model="form.confirm_password">
         </div>
 
         <button @click="submitForm()">Register</button>

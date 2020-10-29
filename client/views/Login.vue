@@ -11,20 +11,18 @@
 
       <div class="form-field">
         <label for="username">Username</label>
-        <input text="form-field" v-model="form.username" /> 
+        <input type="text" class="form-field" id="username" name="username" v-model="form.username" /> 
       </div>
       <div class="form-field">
         <label for="password">Password</label>
-        <input text="form-field" v-model="form.password" /> 
+        <input type="password" class="form-field" id="password" name="password" v-model="form.password" /> 
       </div>
 
       <div class="form-field">
         <button class="button green" @click="loginSubmit()">Login</button>
+        <button class="button default" @click="gotoRegister()">Register</button>
       </div>
-      
-      <div class="form-field">
-        <router-link class="button default" to="/register">Register</router-link>
-      </div>
+    
     </div>
     
     </div>
@@ -52,6 +50,9 @@ export default {
 
   methods: {
     ...mapMutations(['setPlayerDetails']),
+    gotoRegister() {
+      this.$router.push({ 'path': 'register'});
+    },
     loginSubmit() {
       fetch('http://localhost:3000/auth/login', {
         method: "POST",

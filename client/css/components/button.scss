@@ -2,6 +2,9 @@
   display: inline-block;
   padding: 8px;
   color: $colour-black;
+  font-size: 1rem;
+  line-height: 1.2;
+  vertical-align: middle;
 
   text-decoration: none;
   border: none;
@@ -9,7 +12,7 @@
   font-weight: 600;
   z-index: 99;
   transition: background 0.2s linear;
-
+  box-sizing: border-box;
   &.login,
   &.green {
     background: $colour-teal;
