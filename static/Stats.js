@@ -36,10 +36,7 @@ const Buildings = [{
     name: "Mineral Mine",
     base_build_time: 60000,
     build_time_mod: 1.2,
-    calculate:  function (currentLevel) {
-      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
-      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
-    }
+    imgPath: "../assets/images/buildings/mine.png"
   },
   {
     type: 'resource',
@@ -49,10 +46,7 @@ const Buildings = [{
     resource_mod: 1.03,
     base_build_time: 100000,
     build_time_mod: 1.4,
-    calculate:  function (currentLevel) {
-      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
-      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
-    }
+    imgPath: "../assets/images/buildings/chemical.png"
   },
 
   {
@@ -63,10 +57,7 @@ const Buildings = [{
     resource_mod: 1,
     base_build_time: 100000,
     build_time_mod: 1.8,
-    calculate:  function (currentLevel) {
-      // =GlobalSpeed * BaseRres * LVL * POWER(BaseMod, LVL) + LVL * POWER(ResearchMod, RMLVL)* SpecialEventBonus
-      return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
-    }
+    imgPath: "../assets/images/buildings/gas.png"
   },
   {
     type: 'resource',
@@ -130,17 +121,17 @@ const Buildings = [{
   {
     type: 'wonder',
     key: 'bar',
-    name: "Entertainment Complex"
+    name: "Leisure Centre"
   },
   {
     type: 'wonder',
     key: 'academy',
-    name: "The Space Academy"
+    name: "Space Academy"
   },
   {
     type: 'wonder',
     key: 'institute',
-    name: "The Scietific Institute"
+    name: "Scietific Institute"
   },
 ];
 

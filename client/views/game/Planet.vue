@@ -2,7 +2,7 @@
   <div class="planet">
 
     <div class="window">
-      <img src="../../../public/assets/images/planet.jpg" width="100%" height="100%"/>
+      <img src="../../../static/assets/images/planet.jpg" width="100%" height="100%"/>
     </div>
 
     <div class="planet-navigation">

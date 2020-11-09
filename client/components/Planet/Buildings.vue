@@ -1,6 +1,5 @@
 <template>
-  <div class="">
-
+  <div class="action-list-container">
     <action-list :title="'Queue'" :type="'queue'" :items="queueList"></action-list>
 
 

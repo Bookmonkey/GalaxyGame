@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.2.0",
+    "parcel-plugin-static-files-copy": "^2.5.0",
     "sass": "^1.26.11",
     "vue-template-compiler": "^2.6.12"
   },

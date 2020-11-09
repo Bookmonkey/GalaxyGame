@@ -1,6 +1,6 @@
 import { API, AUTH } from "../../config";
 
-import { Resources, Buildings, Ships, ResearchTree } from "../../public/Stats";
+import { Resources, Buildings, Ships, ResearchTree } from "../../static/Stats";
 
 import Vue from "vue";
 import Vuex from 'vuex';

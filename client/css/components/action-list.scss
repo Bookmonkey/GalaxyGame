@@ -2,8 +2,36 @@
   padding: 12px;
 }
 
+.action-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -12px;
+
+  .action-list {
+    margin: 0 12px;
+  }
+}
+
 .action-category {
   font-weight: 600;
+}
+
+.action-list {
+  &.queue {
+    width: 100%;
+
+    .item {
+      width: calc(25% - 16px);
+      .title {
+        width: 100%;
+        text-align: left;
+      }
+    }
+
+    .item:hover {
+      border: 1px solid $colour-black;
+    }
+  }
 }
 
 .actions {
@@ -17,31 +45,55 @@
     flex-direction: row;
     box-sizing: border-box;
 
-    .image {
-      width: 140px;
-      background: $colour-teal;
-      margin-right: 12px;
-      border-radius: 20px;
-    }
-    .content {
-      width: 100%;
-    }
-
-    .title {
-      width: 100%;
-      color: $text-white;
-      margin-bottom: 4px;
-    }
-
     cursor: pointer;
     background: $colour-black;
 
-    width: calc(25% - 16px);
-    padding: 12px;
     margin: 8px;
-
     box-shadow: $shadow;
     border: 1px solid $colour-black;
+
+    &.column {
+      flex-direction: column;
+    }
+
+    .image-container {
+      position: relative;
+      .image {
+        display: block;
+        background: $colour-teal;
+        width: 100%;
+        height: 140px;        
+      }
+
+    
+
+      .content { 
+        position: absolute;
+    
+        top: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.2s ease-in;
+      }
+    }
+
+
+    .production {
+      opacity: 0;
+      color: $text-white;
+      padding: 12px;
+      transition: all 0.2s ease-in;
+    }
+
+    .title {
+      padding: 12px;
+      font-size: 1rem;
+      width: 160px;
+      text-align: center;
+      color: $text-white;
+    }
 
     &.disabled {
       display: flex;
@@ -49,24 +101,27 @@
       align-items: center;
       text-align: center;
 
-      color: $colour-light-grey;        
+      color: $colour-light-grey;
     }
-
-    .button-group {
-      display: none;
-    }
-
-    &.active {
-      .production { display: none; }
-      .button-group { display: flex; }
-
-      border: 1px solid $colour-light-teal;
-    }
-
-
 
     &:hover {
       background: darken($color: $colour-black, $amount: 2);
+      .content { 
+        background: rgba(0,0,0,0.2);
+      }
+
+      .production {
+        opacity: 1;
+      }
+
+      .button-group {
+        display: flex;
+      }
+      border: 1px solid $colour-light-teal;
     }
   }
+}
+
+.button-group {
+  display: none;
 }

@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const Planets = require("../controllers/Planets");
 
-const { Global, Resources, Buildings } = require("../../public/Stats");
+const { Global, Resources, Buildings } = require("../../static/Stats");
 
 
 let API = function() {

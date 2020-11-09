@@ -1,32 +1,45 @@
 <template>
-  <div class="action-list">
+  <div class="action-list" :class="{'queue': type === 'queue'}">
     <div class="title">{{ title }}</div>
 
     <div class="actions" v-if="type === 'queue'">
       <div class="item" :class="item.uiClasses" v-for="item in items" :key="item.id">
-        {{ item.name }}
+        <div class="title">
+          {{ item.name }}
+        </div>
       </div>
     </div>
 
     <div class="actions" v-if="type === 'building'"> 
-      <div class="item" :class="showAction(item.key)" v-for="item in items" :key="item.key" @click.capture="toggleAction(item.key)">
-        <div class="image"></div>
+      <div class="item column" :class="showAction(item.key)" v-for="item in items" :key="item.key" @click.capture="toggleAction(item.key)">
+        <div class="image-container">
+          <img :src="item.imgPath" class="image"/>
+
+          
+          <div class="content">
+            <div class="production">
+              <div class="resources">M: 100, C: 100, G: 000</div>
+              <div class="time">Time: {{ convertToHumanFormat(planetBuildings.times[item.key]) }}</div>
+            </div>
+
+            <div class="button-group">
+              <button class="button green" @click="upgradeAction(item.key)">Upgrade</button>
+              <button class="button blue" @click="gotoActionInfo(item.name)">Info</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="title">{{ item.name }}</div>
+
+        <!-- <div class="image"></div>
         <div class="content">
           <div class="title">
             <span class="name">{{ item.name }}</span>
             <span class="level">{{ getCurrentLevelByKey(item.key) }}</span>
           </div>
           
-          <div class="production">
-            <div class="resources">M: 100, C: 100, G: 000</div>
-            <div class="time">Time: {{ convertToHumanFormat(planetBuildings.times[item.key]) }}</div>
-          </div>
-
-          <div class="button-group">
-            <button class="button green" @click="upgradeAction(item.key)">Upgrade</button>
-            <button class="button blue" @click="gotoActionInfo(item.name)">Info</button>
-          </div>
-        </div>
+          
+        </div> -->
       </div>
     </div>
 
