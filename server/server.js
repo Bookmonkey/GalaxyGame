@@ -15,10 +15,11 @@ const cookieParser = require("cookie-parser");
 const API = require("./api/api");
 const Auth = require("./api/auth");
 
+const QueueController = require("./controllers/QueueController");
+const Queue = QueueController();
+
 
 // TOOD: install morgan or logging
-
-
 
 
 app.engine("html", require("ejs").renderFile);
@@ -57,3 +58,5 @@ app.listen(port, () => {
   console.log(`> Galaxy Game server starting on http://localhost:${port}/`);
   console.log(`> Using DB: ${config.database.database} on ${config.database.host}`);
 });
+
+Queue.start();

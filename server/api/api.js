@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const Planets = require("../controllers/Planets");
 
+const Queue = require("../controllers/QueueController");
+
 const { Global, Resources, Buildings } = require("../../static/Stats");
 
 
@@ -47,12 +49,41 @@ let API = function() {
     let planetId = req.body.planetId;
 
     // need to implement queue
-    // await Planets.addToQueue(type, key, planetId, playerId);
-
-
-    await Planets.upgradeBuilding(type, key, planetId, playerId);
     
-    updateResources(planetId, playerId);    
+    try {
+      let planetBuildingLevels = await Planets.getBuildingLevels(planetId, playerId);
+      let buildingLevel = planetBuildingLevels[key];
+
+      let buildingInfo = Buildings.filter(ele => ele.key === key)[0];
+
+      let buildTime = getCurrentTimeForLevel(buildingInfo, buildingLevel);
+      let timestamp = new Date().getTime() + buildTime;
+      timestamp = new Date(timestamp);
+
+      let addToUpcomingItems = false;
+
+      if(buildTime < Global.interval) {
+        addToUpcomingItems = true;  
+      }
+
+      let payload = {
+        type,
+        key,
+        timestamp,
+        playerId,
+        planetId,
+        addToUpcomingItems
+      };
+
+      Queue.add('building', payload);
+    } catch (error) {
+      console.error(error);
+    }
+
+
+    // await Planets.upgradeBuilding(type, key, planetId, playerId);
+    
+    // updateResources(planetId, playerId);    
   });  
 
 
@@ -60,11 +91,11 @@ let API = function() {
   return router;
 }
 
-function getCurrentTimeForLevel(item, levels) {
+function getCurrentTimeForLevel(item, level) {
   let specialBaseTime = parseInt(Global.build_time);
   let baseTime = parseInt(item.base_build_time);
   let mod = parseFloat(item.build_time_mod);
-  let level = parseInt(levels[item.key]);
+
   let time = baseTime;
 
   if(level > 0) {
@@ -85,9 +116,9 @@ function formatPlanetInfo(planetInfo){
     },
     resources: { },
     levels: {
-      mine: planetInfo.mine_level,
-      chemical: planetInfo.chemical_level,
-      gas: planetInfo.gas_level,
+      mine: planetInfo.mine,
+      chemical: planetInfo.chemical,
+      gas: planetInfo.gas,
     },
     buildingTimes: {},
     military: {},
@@ -98,7 +129,8 @@ function formatPlanetInfo(planetInfo){
   // then appends to the info object above
   Buildings.map((building) => {
     let key = building.key;
-    let timeForLevel = getCurrentTimeForLevel(building, info.levels);
+    let level = info.levels[building.key];
+    let timeForLevel = getCurrentTimeForLevel(building, level);
     info.buildingTimes[key] = timeForLevel;
 
     return building;
@@ -120,9 +152,9 @@ async function updateResources(planetId, playerId) {
   let resources = await Planets.getResources(planetId, playerId);
   let buildingLevels = await Planets.getBuildingLevels(planetId, playerId);
   let levels = {
-    mine: buildingLevels.mine_level,
-    chemical: buildingLevels.chemical_level,
-    gas: buildingLevels.gas_level
+    mine: buildingLevels.mine,
+    chemical: buildingLevels.chemical,
+    gas: buildingLevels.gas
   };
 
   

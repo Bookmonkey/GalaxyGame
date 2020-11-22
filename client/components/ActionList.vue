@@ -79,7 +79,7 @@ export default {
     
     upgradeAction(key) {
       let payload = {
-        type: this.upgradeType,
+        type: this.type,
         key
       };
 

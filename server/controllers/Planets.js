@@ -91,29 +91,11 @@ const Planets = {
     return rows;
   },
 
-  upgradeBuilding: async (type, key, planetId, playerId) => {
-    let column = '';
-    switch (key) {
-      case "mine": 
-        column = "mine_level";
-      break;
-      case "chemical": 
-        column = "chemical_level";
-      break;
-      case "gas": 
-        column = "gas_level";
-      break;
-
-      default:
-        column = undefined;
-        break;
-    }
-
-    if(column){
+  upgradeBuilding: async (key, planetId, playerId) => {
       const { rows, command } = await db.query(`
-      update planet_buildings set ${column} = ${column} + 1 where planet_id = $1 and player_id = $2;
+      update planet_buildings set ${key} = ${key} + 1 where planet_id = $1 and player_id = $2;
       `, [planetId, playerId]);      
-    }
+    
   },
 
   getBuildingLevels: async (planetId, playerId) => {

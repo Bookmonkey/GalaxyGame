@@ -1,6 +1,11 @@
 const Global = {
   build_time: 0.00,
   speed: 3,
+
+  tick: 1000,
+
+  // @property how long the queue is refreshed
+  interval: 300000,
 };
 
 const Resources = {

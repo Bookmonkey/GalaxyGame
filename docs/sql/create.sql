@@ -44,11 +44,20 @@ create table planet_resources (
 
 create table planet_buildings (
   id serial not null primary key,
-  mine_level int not null default 1,
-  chemical_level int not null default 1,
-  gas_level int not null default 1,
-  energy_level int not null default 1,
+  mine int not null default 1,
+  chemical int not null default 1,
+  gas int not null default 1,
+  energy int not null default 1,
 
+  player_id int not null references player(id),
+  planet_id int not null references planet(id)
+);
+
+create table planet_queue_item (
+  id serial not null primary key,
+  item_type text not null,
+  item_key text not null,
+  queue_timestamp TIMESTAMPTZ not null,
   player_id int not null references player(id),
   planet_id int not null references planet(id)
 );
@@ -87,3 +96,4 @@ create table planet_fleet_queue_item (
   player_id int not null references player(id),
   planet_id int not null references planet(id)
 );
+
