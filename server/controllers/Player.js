@@ -1,5 +1,4 @@
 const Player = {
-  create: () => {},
   delete: () => {},
   ban: () => {}
 };

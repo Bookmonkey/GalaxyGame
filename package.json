@@ -14,6 +14,7 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "nodemailer": "^6.4.16",
     "parcel-bundler": "^1.12.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
@@ -26,14 +27,17 @@
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^3.2.0",
+    "cross-env": "^7.0.2",
+    "mocha": "^8.2.1",
     "parcel-plugin-static-files-copy": "^2.5.0",
     "sass": "^1.26.11",
     "vue-template-compiler": "^2.6.12"
   },
   "scripts": {
     "client": "parcel client/index.html --https",
-    "server": "node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:server": "mocha server/tests/*",
+    "dev:server": "cross-env NODE_ENV=development node server/server.js",
+    "prod:server": "cross-env NODE_ENV=prod node server/server.js"
   },
   "repository": {
     "type": "git",

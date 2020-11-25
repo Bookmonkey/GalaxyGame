@@ -57,6 +57,7 @@ app.get("/", function (req, res) {
 app.listen(port, () => {
   console.log(`> Galaxy Game server starting on http://localhost:${port}/`);
   console.log(`> Using DB: ${config.database.database} on ${config.database.host}`);
+  console.log(`> running in ${process.env.NODE_ENV} mode`);
 });
 
 Queue.start();

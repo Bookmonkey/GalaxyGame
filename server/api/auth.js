@@ -1,13 +1,13 @@
-const {
-  Router
-} = require("express");
-const Auth = require("../controllers/Auth");
+const {  Router } = require("express");
+
+
 const bcrypt = require("bcrypt");
 const SALTROUNDS = 10;
 
 const LocalStrategy = require("passport-local").Strategy;
 
-const db = require("../db");
+const PlayerData = require("../data/Player");
+const Auth = require("../controllers/Auth");
 const Planets = require("../controllers/Planets");
 
 let AuthRouter = function (passport) {
@@ -53,14 +53,16 @@ let AuthRouter = function (passport) {
       }
 
       if (!userInfo) {
-        return res.status(400).send({ error: "Incorrect username/password combination" });
+        return res.status(400).send({
+          error: "Incorrect username/password combination"
+        });
       }
 
       req.login(userInfo, function (err) {
         if (err) {
           return next(err);
         }
-        
+
         res.status(200).send({
           username: req.user.username,
           playerId: req.user.id
@@ -71,14 +73,13 @@ let AuthRouter = function (passport) {
 
 
   router.get("/isloggedin", (req, res) => {
-    if(req.isAuthenticated()) {
+    if (req.isAuthenticated()) {
       let userInfo = {
         playerId: req.user.id,
         username: req.user.username
       }
       res.status(200).send(userInfo);
-    } 
-    else {
+    } else {
       res.status(400).send(false);
     }
 
@@ -96,20 +97,20 @@ let AuthRouter = function (passport) {
     let password = req.body.password;
     let confirmPassword = req.body.confirm_password;
 
-    if(password === confirmPassword) {
+    if (password === confirmPassword) {
       try {
         let hashedPassword = await bcrypt.hash(password, SALTROUNDS);
-        let playerId = await Auth.createAccount(email, username, hashedPassword);
+
+        let playerId = await PlayerData.create(email, username, hashedPassword);
+        
         let createdPlanet = await Planets.create(playerId);
-        
+
         // create planet and other tables
-        
+
       } catch (error) {
         console.error(error);
       }
-    }
-
-    else {
+    } else {
       res.status(400).send("not ok");
     }
   });
