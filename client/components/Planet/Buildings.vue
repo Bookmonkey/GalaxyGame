@@ -1,6 +1,6 @@
 <template>
   <div class="action-list-container">
-    <action-list :title="'Queue'" :type="'queue'" :items="queueList"></action-list>
+    <action-list :title="'Queue'" :type="'queue'" :items="planetBuildingQueue"></action-list>
 
 
     <action-list :title="'Production'" :type="'building'" :items="buildings.resource"></action-list>
@@ -22,21 +22,14 @@ export default {
   data() {
     return {
       upgradeType: 'building',
-      buildingName: '',
-
-      queueList: [
-        { name: "Mineral lvl 2" },
-        { name: "Mineral lvl 3" },
-        { name: "Queue lvl 3 requires Construction Research lvl 5", uiClasses: 'disabled' },
-        { name: "Queue lvl 3 requires Construction Research lvl 7", uiClasses: 'disabled' }
-      ]
+      buildingName: ''
     }
   },
   methods: {
   },
 
   computed: {
-    ...mapGetters(['buildings', 'planetInfo', 'planetBuildings']),
+    ...mapGetters(['buildings', 'planetInfo', 'planetBuildings', 'planetBuildingQueue']),
   }
 }
 </script>

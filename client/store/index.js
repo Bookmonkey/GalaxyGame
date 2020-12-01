@@ -135,6 +135,10 @@ const getters = {
     return state.currentPlanet.resources;
   },
 
+  planetBuildingQueue: (state) => {
+    return  state.currentPlanet.buildingQueue;
+  },
+
   planetBuildings: (state) => {
     return {
       levels: state.currentPlanet.levels,

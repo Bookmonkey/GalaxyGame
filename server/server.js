@@ -15,8 +15,7 @@ const cookieParser = require("cookie-parser");
 const API = require("./api/api");
 const Auth = require("./api/auth");
 
-const QueueController = require("./controllers/QueueController");
-const Queue = QueueController();
+const Queue = require("./controllers/QueueController");
 
 
 // TOOD: install morgan or logging

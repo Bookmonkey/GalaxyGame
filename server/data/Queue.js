@@ -1,12 +1,14 @@
 const db = require("../db");
 
 const QueueData = {
-  add: async () => {
+  add: async (payload) => {
 
     const {
       rows
     } = await db.query(`insert into planet_queue_item (item_type, item_key, queue_timestamp, planet_id, player_id) values ($1, $2, $3, $4, $5) returning *, EXTRACT(EPOCH FROM queue_timestamp) as epoch;`,
       [payload.type, payload.key, payload.timestamp, payload.planetId, payload.playerId]);
+
+      return rows;
   },
 
   remove: async function (items) {
@@ -32,6 +34,12 @@ const QueueData = {
     } = await db.query(`select *, EXTRACT(EPOCH FROM queue_timestamp) as epoch  from planet_queue_item where queue_timestamp <= NOW() + INTERVAL '5 minutes'`);
     return rows;
   },
+
+
+  getItemsByPlanetId: async function (planetId) {
+    const { rows } = await db.query(`select *, EXTRACT(EPOCH FROM queue_timestamp) as epoch  from planet_queue_item where planet_id = $1;`, [planetId]);
+    return rows;
+  }
 };
 
 module.exports = QueueData;

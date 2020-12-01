@@ -10,7 +10,7 @@
         :key="item.id"
       >
         <div class="title">
-          {{ item.name }}
+          {{ item.item_key }}
         </div>
       </div>
     </div>

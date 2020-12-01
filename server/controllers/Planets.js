@@ -1,10 +1,13 @@
-const db = require("../db");
+const { Global, Resources, Buildings } = require("../../static/Stats");
+// const PlanetData = require("../data/Planet");
+const { PlanetData, QueueData } = require("../data");
+const Queue = require("../controllers/QueueController");
 
-const Planets = {
-  create: async (playerId) => {
-    // randomize option of planets
+const PlanetController = {
 
-    let data = {
+  create: function (playerId) {
+    // generate planet information
+    let planetData = {
       name: "Homeworld",
       type: "default",
       slot_total: 400,
@@ -12,134 +15,183 @@ const Planets = {
       playerId: playerId
     };
 
-    let client = await db.createClient();
-    
+    PlanetData.create(planetData);
+  },
+
+  getInformationForPlanet: async function(planetId) {
+    let planetInfo = await PlanetData.getInformationForPlanet(planetId);
+
+    let buildingsInQueue = await QueueData.getItemsByPlanetId(planetId);
+
+    planetInfo = this.formatPlanetInfo(planetInfo);
+    planetInfo.buildingQueue = buildingsInQueue;
+
+    console.log(planetInfo);
+
+    return planetInfo;
+  },
+
+  getAllPlanetsForPlayerId: async function(playerId) {
+    let planets = await PlanetData.getAllPlanetsForPlayerId(playerId);
+    planets.map(ele => {
+      return this.formatPlanetInfo(ele);
+    });
+
+    return planets;
+  },
+
+  addBuildingToQueue: async function (type, key, playerId, planetId) {
+    let result = {
+      added: false,
+      error: "",
+    };
+
     try {
-      await client.query("BEGIN");
+      let planetBuildingLevels = await PlanetData.getBuildingLevels(planetId, playerId);
+      let buildingLevel = planetBuildingLevels[key];
 
-      const { rows } = await client.query(`
-        insert into planet (planet_name, planet_type, building_slot_total, is_npc, player_id)
-        VALUES ($1, $2, $3, $4, $5) returning id;
-      `, [
-        data.name,
-        data.type,
-        data.slot_total,
-        data.npc,
-        playerId
-      ]);
+      let buildingInfo = Buildings.filter(ele => ele.key === key)[0];
 
-      if(rows === undefined) {
-        throw new Error("failure in creating planet"); 
+      let buildTime = this.getCurrentTimeForLevel(buildingInfo, buildingLevel);
+      let timestamp = new Date().getTime() + buildTime;
+      timestamp = new Date(timestamp);
+
+      let addToUpcomingItems = false;
+
+      if(buildTime < Global.interval) {
+        addToUpcomingItems = true;  
       }
 
-      let planetId = rows[0].id;
-      await client.query('insert into planet_resources (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_buildings (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_defences (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_fleet (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query("COMMIT");
+      let payload = {
+        type,
+        key,
+        timestamp,
+        playerId,
+        planetId,
+        addToUpcomingItems
+      };
+
+      Queue.add('building', payload);
+
+      result.added = true;
+
     } catch (error) {
-      await client.query("ROLLBACK");
       console.error(error);
     }
-    finally{
-      client.release();
-    }
+
+    return result;
+
+   },
+
+  formatPlanetInfo: function (planetInfo){
+    let info = {
+      info: {
+        id: planetInfo.planet_id,
+        name: planetInfo.planet_name,
+        type: planetInfo.planet_type,
+        slots: planetInfo.building_slots_total
+      },
+      resources: { },
+      levels: {
+        mine: planetInfo.mine,
+        chemical: planetInfo.chemical,
+        gas: planetInfo.gas,
+      },
+      buildingTimes: {},
+      military: {},
+    };
+  
+    // loops through Stats building object
+    // calculates resources and time based on levels
+    // then appends to the info object above
+    Buildings.map((building) => {
+      let key = building.key;
+      let level = info.levels[building.key];
+      let timeForLevel = this.getCurrentTimeForLevel(building, level);
+      info.buildingTimes[key] = timeForLevel;
+  
+      return building;
+    });
+
+
+    let minerals = parseInt(planetInfo.minerals);
+    let chemicals = parseInt(planetInfo.chemicals);
+    let gases = parseInt(planetInfo.gases);
+    let energy = parseInt(planetInfo.energy);
+    let lastTimestamp = planetInfo.last_updated_timestamp;
+  
+    info.resources = this.calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy, lastTimestamp, info.levels);
+  
+    return info;
   },
 
-  destroy: (planetId, planetName) => {
-    // 
-  },
-
-  rename: (planetId, newPlanetName) => {
+  updateResources: async function(planetId, playerId) {
+    let resources = await PlanetData.getResources(planetId, playerId);
+    let buildingLevels = await PlanetData.getBuildingLevels(planetId, playerId);
+    let levels = {
+      mine: buildingLevels.mine,
+      chemical: buildingLevels.chemical,
+      gas: buildingLevels.gas
+    };
+  
     
+    let minerals = parseInt(resources.minerals);
+    let chemicals = parseInt(resources.chemicals);
+    let gases = parseInt(resources.gases);
+    let energy = parseInt(resources.energy);
+  
+      
+    let lastTimestamp = resources.last_updated_timestamp;
+  
+    let latestResources = this.calculateResourcesFromLastTimestamp(minerals, chemicals, gases, energy, lastTimestamp, levels);
+    await PlanetData.updateResources(latestResources, planetId, playerId);
   },
 
-
-  getInformationForPlanet: async (planetId) => {
-    // properly define the select fields, to avoid duplications
-    const { rows } = await db.query(`
-      select * from planet p
-        left join planet_resources r on r.planet_id = p.id
-        left join planet_buildings b on b.planet_id = p.id
-        left join planet_defences d on d.planet_id = p.id
-        left join planet_fleet f on f.planet_id = p.id
-      where p.id = $1;
-    `, [planetId]);
-
-    if(rows === undefined) {
-      return false
+  getCurrentTimeForLevel: function(item, level) {
+    let specialBaseTime = parseInt(Global.build_time);
+    let baseTime = parseInt(item.base_build_time);
+    let mod = parseFloat(item.build_time_mod);
+  
+    let time = baseTime;
+  
+    if(level > 0) {
+      time *= (mod * level); 
     }
-
-    return rows[0];
-  },
-
-  getAllPlanetsForPlayerId: async(playerId) => {
-    const { rows } = await db.query(`
-      select * from planet p
-        left join planet_resources r on r.planet_id = p.id
-        left join planet_buildings b on b.planet_id = p.id
-        left join planet_defences d on d.planet_id = p.id
-        left join planet_fleet f on f.planet_id = p.id
-      where p.player_id = $1;
-    `, [playerId]);
-
-    if(rows === undefined) {
-      return false
-    }
-
-    return rows;
-  },
-
-  upgradeBuilding: async (key, planetId, playerId) => {
-      const { rows, command } = await db.query(`
-      update planet_buildings set ${key} = ${key} + 1 where planet_id = $1 and player_id = $2;
-      `, [planetId, playerId]);      
-    
-  },
-
-  getBuildingLevels: async (planetId, playerId) => {
-    const { rows } = await db.query(`select * from planet_buildings where planet_id = $1 and player_id = $2;`, [planetId, playerId]);
-    return rows[0];
-  },
-
-  buildFleet: (planetId) => {},
-  buildDefence: (planetId) => {},
-
-
-  getAllQueues: () => { 
-
+  
+    return time;
   },
   
-  getQueue: (type) => { },
-  addToQueue: () => { },
-  removeFromQueue: () => { },
+  calculateResourcesFromLastTimestamp: function(minerals, chemicals, gases, energy, lastTimestamp, levels) {
+    let resources = {
+      minerals: minerals, 
+      chemicals: chemicals,
+      gases: gases,
+      energy: energy,
+    };
+  
+    
+    let timeNow = new Date();
+    let lastTime = new Date(lastTimestamp);
+    
+    // number of seconds since
+    let totalTimeSince = Math.round(Math.abs((timeNow.getTime() - lastTime.getTime()) / 1000));
+  
+  
+    // calculate the amount generated for each second.
+    let latestResources = {
+      minerals: Resources.minerals.calculate(levels['mine']) / 3600,
+      chemicals: Resources.chemicals.calculate(levels['chemical']) / 3600,
+      gases: Resources.gases.calculate(levels['gas']) / 3600,
+    };  
+    
+    resources.minerals += Math.floor(latestResources.minerals * totalTimeSince);
+    resources.chemicals +=  Math.floor(latestResources.chemicals * totalTimeSince);
+    resources.gases += Math.floor(latestResources.gas * totalTimeSince);
+    
+    return resources;
+  }
+  
 
+};
 
-  getResources: async(planetId, playerId) => {
-    const { rows } = await db.query(`select minerals, chemicals, gases, energy, last_updated_timestamp from planet_resources where planet_id = $1 and player_id = $2;`, [planetId, playerId]);
-    return rows[0];
-  },
-
-  updateResources: async (resources, planetId, playerId) => {
-    const { rows } = await db.query(`
-    update planet_resources 
-      set minerals = $1,
-      chemicals = $2,
-      gases = $3,
-      energy = $4,
-      last_updated_timestamp = now()
-      where planet_id = $5 and player_id = $6; 
-    `,
-    [
-      resources.minerals,
-      resources.chemicals,
-      resources.gases,
-      resources.energy,
-      planetId,
-      playerId
-    ]);
-  },
-}
-
-module.exports = Planets
+module.exports = PlanetController;
