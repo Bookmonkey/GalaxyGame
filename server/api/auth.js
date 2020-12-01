@@ -103,7 +103,7 @@ let AuthRouter = function (passport) {
 
         let playerId = await PlayerData.create(email, username, hashedPassword);
         
-        let createdPlanet = await Planets.create(playerId);
+        let createdPlanet = await Planets.create("Homeworld", playerId);
 
         // create planet and other tables
 

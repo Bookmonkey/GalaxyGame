@@ -1,6 +1,4 @@
-const PlanetData = require("../data/Planet");
-const QueueData = require("../data/Queue");
-
+const { PlanetData, QueueData } = require("../data");
 const QUEUEINTERVAL = require("../../config").queueInterval;
 
 const QueueController = {
@@ -67,7 +65,10 @@ const QueueController = {
 
       this.process();
 
-      console.log(this.tick, Object.keys(this.upcomingItems).length);
+      if(Object.keys(this.upcomingItems).length > 0) {
+          console.log('Total amount of queue items', Object.keys(this.upcomingItems).length);
+      }
+
     }, interval);
   }
 };

@@ -1,16 +1,18 @@
-const { Global, Resources, Buildings } = require("../../static/Stats");
-// const PlanetData = require("../data/Planet");
+const { Global, PlanetTypes, Resources, Buildings } = require("../../static/Stats");
 const { PlanetData, QueueData } = require("../data");
 const Queue = require("../controllers/QueueController");
 
 const PlanetController = {
-
-  create: function (playerId) {
+  create: function (planetName, playerId) {
     // generate planet information
+
+    let planet = this.randomizePlanetDefintion();
+    
     let planetData = {
-      name: "Homeworld",
-      type: "default",
-      slot_total: 400,
+      name: planetName,
+      type: planet.type,
+      slots: planet.slots,
+      artifacts: planet.artifacts,
       npc: false,
       playerId: playerId
     };
@@ -189,8 +191,29 @@ const PlanetController = {
     resources.gases += Math.floor(latestResources.gas * totalTimeSince);
     
     return resources;
-  }
+  },
   
+  
+  randomizePlanetDefintion: () => {
+    let definition = {
+      type: 'default',
+      slots: 0,
+      artifacts:0,
+    };
+    
+    let planetTypeLength = PlanetTypes.length;
+    let planetIndex = Math.floor(Math.random() * planetTypeLength);
+
+    let planet = PlanetTypes[planetIndex];
+    definition.type = planet.type;
+    definition.slots = Math.floor(Math.random() * (planet.slots[1] - planet.slots[0] + 1) + planet.slots[0]);
+
+    if(planet.artifacts !== null) {
+      definition.artifacts = Math.floor(Math.random() * (planet.artifacts[1] - planet.artifacts[0] + 1) + planet.artifacts[0]);
+    }
+    
+    return definition;
+  },
 
 };
 

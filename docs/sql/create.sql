@@ -26,7 +26,8 @@ create table planet (
   id serial not null primary key,
   planet_name text not null default 'Homeworld',
   planet_type text not null,
-  building_slot_total int not null,
+  slots int not null,
+  artifacts int not null,
   is_npc boolean not null,
   player_id int not null references player(id)
 );

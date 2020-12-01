@@ -1,20 +1,21 @@
 const db = require("../db");
 
 const Planet = {
-  create: async (planetData) => {
+  create: async (data) => {
     let client = await db.createClient();    
     try {
       await client.query("BEGIN");
 
       const { rows } = await client.query(`
-        insert into planet (planet_name, planet_type, building_slot_total, is_npc, player_id)
-        VALUES ($1, $2, $3, $4, $5) returning id;
+        insert into planet (planet_name, planet_type, slots, artifacts, is_npc, player_id)
+        VALUES ($1, $2, $3, $4, $5, $6) returning id;
       `, [
         data.name,
         data.type,
-        data.slot_total,
+        data.slots,
+        data.artifacts,
         data.npc,
-        playerId
+        data.playerId
       ]);
 
       if(rows === undefined) {
@@ -22,10 +23,10 @@ const Planet = {
       }
 
       let planetId = rows[0].id;
-      await client.query('insert into planet_resources (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_buildings (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_defences (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
-      await client.query('insert into planet_fleet (planet_id, player_id) values ($1, $2);', [planetId, playerId]);
+      await client.query('insert into planet_resources (planet_id, player_id) values ($1, $2);', [planetId, data.playerId]);
+      await client.query('insert into planet_buildings (planet_id, player_id) values ($1, $2);', [planetId, data.playerId]);
+      await client.query('insert into planet_defences (planet_id, player_id) values ($1, $2);', [planetId, data.playerId]);
+      await client.query('insert into planet_fleet (planet_id, player_id) values ($1, $2);', [planetId, data.playerId]);
       await client.query("COMMIT");
     } catch (error) {
       await client.query("ROLLBACK");

@@ -12,7 +12,7 @@
     </div>
 
     <div class="form-field">
-      <label for="temp">Temp: </label>
+      <label for="temp">Size: </label>
       {{ planetInfo.temp }}
     </div>
     <div class="form-field">

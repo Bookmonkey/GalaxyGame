@@ -16,6 +16,7 @@ const API = require("./api/api");
 const Auth = require("./api/auth");
 
 const Queue = require("./controllers/QueueController");
+const Planet = require("./controllers/Planets");
 
 
 // TOOD: install morgan or logging
@@ -60,3 +61,5 @@ app.listen(port, () => {
 });
 
 Queue.start();
+
+

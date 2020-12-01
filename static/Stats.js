@@ -8,6 +8,33 @@ const Global = {
   interval: 300000,
 };
 
+const PlanetTypes = [
+  {
+    type: "earthlike",
+    slots: [200, 260],
+    temperatures: [16, 27],
+    artifacts: [1,2]
+  },
+  {
+    type: "aqua",
+    slots: [140, 190],
+    temperatures: [8, 18],
+    artifacts: null
+  },
+  {
+    type: "giant", 
+    slots: [230, 290],
+    temperatures: [19, 34],
+    artifacts: [0,2]
+  },
+  {
+    type: "dwarf", 
+    slots: [110, 170],
+    temperatures: [16, 27],
+    artifacts: [2,4]
+  },
+]
+
 const Resources = {
   minerals: {
     base_resource: 45,
@@ -33,7 +60,7 @@ const Resources = {
       return Global.speed * this.base_resource * currentLevel * Math.pow(this.resource_mod, currentLevel);
     }
   }
-}
+};
 
 const Buildings = [{
     type: 'resource',
@@ -348,6 +375,7 @@ const Defence = [];
 
 module.exports = {
   Global,
+  PlanetTypes,
   Resources,
   Buildings,
   Ships,
